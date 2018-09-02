@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  update:
+    docker:
+      - image: debian:stretch
+    steps:
+      - checkout
+      - run: ./update.sh
+workflows:
+  version: 2
+  commit-workflow:
+    jobs:
+      - update
+  update-workflow:
+    jobs:
+      - update
+    triggers:
+      - schedule:
+          cron: "0 1 * * *" # 日本時間 10:00
+          filters:
+            branches:
+              only:
+                - master
